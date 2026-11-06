@@ -1,0 +1,398 @@
+{
+  "program": "MTI_Core_Partners_System",
+  "version": "1.0",
+  "language": "en",
+  "created": "2026-11-06",
+  "owner": "MTI - Farag Ali",
+  "purpose": "A program specification for a system designed to run inside the MTI platform core, in the background, driven by the in-platform Assistant. The Assistant delivers to each partner only what concerns that partner, to take an opinion or an approval, according to that partner's own approved systems.",
+  "scope": "Platform only. This file covers the Fintech Lawyer partner and the Accountant and Auditor partner for the MTI platform only. No other business is covered.",
+  "principles": {
+    "partners_system": "One person per task, and one task per person. No two partners do the same work. No overlap.",
+    "halal_only": "MTI works halal only. Data is never sold. Data is used as paid services.",
+    "documentation": "No verbal work. Every task is written, stamped, recorded, and stored in the core.",
+    "official_framework": "All partner work runs inside a legal and accounting framework that is formally recognized by the State, official authorities, banks, and global and international bodies."
+  },
+  "platform": {
+    "name": "MTI",
+    "products": [
+      {
+        "product_id": "MTI-P001",
+        "name": "Ceramic Floor Tiles 60x60",
+        "hs_6": "690721",
+        "mti_commission_pct": 6
+      },
+      {
+        "product_id": "MTI-P002",
+        "name": "Porcelain 60x120",
+        "hs_6": "690721",
+        "mti_commission_pct": 7
+      },
+      {
+        "product_id": "MTI-P003",
+        "name": "Tomato Paste 36/38 Brix",
+        "hs_6": "200290",
+        "mti_commission_pct": 7
+      },
+      {
+        "product_id": "MTI-P004",
+        "name": "Cotton T-Shirt",
+        "hs_6": "610910",
+        "mti_commission_pct": 10
+      },
+      {
+        "product_id": "MTI-P005",
+        "name": "Extra Virgin Olive Oil",
+        "hs_6": "151910",
+        "mti_commission_pct": 8
+      },
+      {
+        "product_id": "MTI-P006",
+        "name": "Beech Wood Chair",
+        "hs_6": "940161",
+        "mti_commission_pct": 9
+      }
+    ]
+  },
+  "core": {
+    "location": "Inside the MTI platform core",
+    "mode": "Background service. It runs continuously, without user action, and wakes on events.",
+    "assistant": {
+      "role": "Coordinator only. The Assistant does not give a legal opinion and does not give an accounting opinion.",
+      "duties": [
+        "Prepare the question or file for the correct partner only",
+        "Deliver to each partner only what concerns that partner",
+        "Collect the partner opinion or approval",
+        "Execute the approved result and record it in the core",
+        "Coordinate between the two partners so no task is lost between them",
+        "Route every task by task_type, never by person"
+      ],
+      "sla_hours": 48,
+      "routing_rules": [
+        "If task_type is legal, route to legal_partner only",
+        "If task_type is accounting, route to accounting_partner only",
+        "If task_type is joint, route to both partners in parallel, then merge both approvals",
+        "Never route a legal task to the accounting partner",
+        "Never route an accounting task to the legal partner"
+      ]
+    },
+    "background_jobs": [
+      {
+        "job": "event_listener",
+        "trigger": "New deal, new contract, new invoice, new payment, new subscription, new partner message",
+        "action": "Create a task in the core queue"
+      },
+      {
+        "job": "router",
+        "trigger": "Task created",
+        "action": "Classify task_type and route to the correct partner"
+      },
+      {
+        "job": "reminder",
+        "trigger": "48 hours without partner reply",
+        "action": "Remind the partner and notify MTI owner"
+      },
+      {
+        "job": "commission_engine",
+        "trigger": "Actual collection of MTI deal commissions confirmed by bank",
+        "action": "Compute total deal commissions collected from deal contracts, compute 3 percent for each partner on that total only, create payable records"
+      },
+      {
+        "job": "reconciliation",
+        "trigger": "Daily and monthly",
+        "action": "Match bank statement with core ledger, flag any difference"
+      },
+      {
+        "job": "audit_log",
+        "trigger": "Every action",
+        "action": "Write immutable log: who, what, when, file, approval"
+      }
+    ]
+  },
+  "partners": {
+    "rule": "One partner per task. One task per partner.",
+    "total_core_pct": 6,
+    "mti_retained_pct_before_operating_costs": 94,
+    "legal_partner": {
+      "id": "legal_partner",
+      "title": "Fintech Lawyer Partner - Contractor for All Legal Affairs of the Platform, by Specialization",
+      "contract_type": "Long-term contracting contract for all legal affairs - by specialization",
+      "duration": "3 years, auto-renewed, 90 days termination notice",
+      "commission": {
+        "pct_of_total_deal_commissions_collected": 3,
+        "base": "Total deal commissions collected from deal contracts - commissions on deals or platform operations only",
+        "base_definition": "The base is the total of MTI deal commissions actually collected from deal contracts. It is before any deduction for bank charges, taxes, salaries, or subscriptions. Subscriptions are NOT included. Any other income is NOT included. Net profit is NOT the base. Total income is NOT the base. Deals only.",
+        "excluded": [
+          "Subscriptions income",
+          "Total income",
+          "Net profit",
+          "Any income that is not a deal commission"
+        ],
+        "included": [
+          "MTI commissions from deal contracts",
+          "MTI commissions from platform operations that are deals"
+        ],
+        "payment_timing": "Paid only together with actual collection of MTI deal commissions. If MTI collects deal commissions on day 10, the partner is paid on day 10. If MTI does not collect, the partner receives zero.",
+        "no_advance": true,
+        "no_fixed_monthly": true,
+        "example": "Total deal commissions collected in a month = 20000, subscriptions collected = 2000 NOT included, partner share = 3 percent x 20000 = 600, not 3 percent x 22000"
+      },
+      "scope_all_legal_affairs": [
+        "All platform contracts: exporters, importers, information partners, Escrow, subscriptions",
+        "Compliance: Central Bank of Egypt (CBE), Financial Regulatory Authority (FRA), Data Protection Law, E-Commerce Law",
+        "Platform licences: registration, commercial register, tax",
+        "Disputes: arbitration and settlement",
+        "Data policy: data is never sold, data is used as paid services",
+        "Any legal matter of the platform - the legal partner is solely responsible for it"
+      ],
+      "does_not_do": [
+        "No accounting entry",
+        "No bank reconciliation",
+        "No accounting opinion"
+      ],
+      "own_approved_system": "The legal partner works under the partner's own approved legal system: written opinions, stamped contracts, documented approvals that are recognized by the State, official authorities, banks, and global and international bodies.",
+      "assistant_flow": [
+        "Assistant prepares the legal question and the file",
+        "Assistant delivers to the legal partner only the legal part",
+        "Legal partner returns a written opinion or approval within 48 working hours",
+        "Assistant executes and records the result in the core"
+      ],
+      "examples": [
+        {
+          "deal": "Ceramic 100000 USD",
+          "mti_commission_pct": 6,
+          "legal_partner_3pct": 180,
+          "total_deal_commissions_collected": 6000
+        },
+        {
+          "deal": "Tomato paste 47500 USD",
+          "mti_commission_pct": 7,
+          "legal_partner_3pct": 99.75,
+          "total_deal_commissions_collected": 3325
+        },
+        {
+          "deal": "T-Shirt 480000 USD",
+          "mti_commission_pct": 10,
+          "legal_partner_3pct": 1440,
+          "total_deal_commissions_collected": 48000
+        }
+      ]
+    },
+    "accounting_partner": {
+      "id": "accounting_partner",
+      "title": "Accountant and Auditor Partner - Contractor for All Accounting Work of the Platform, From A to Z, With an Electronic System",
+      "contract_type": "Long-term contracting contract for all accounting work - from A to Z - with an electronic system",
+      "duration": "3 years, auto-renewed, 90 days termination notice",
+      "qualification": "Licensed legal accountant, registered, with experience in information systems and banks. Electronic system, not paper work.",
+      "commission": {
+        "pct_of_total_deal_commissions_collected": 3,
+        "base": "Total deal commissions collected from deal contracts - commissions on deals or platform operations only",
+        "base_definition": "The base is the total of MTI deal commissions actually collected from deal contracts. It is before any deduction for bank charges, taxes, salaries, or subscriptions. Subscriptions are NOT included. Any other income is NOT included. Net profit is NOT the base. Total income is NOT the base. Deals only.",
+        "excluded": [
+          "Subscriptions income",
+          "Total income",
+          "Net profit",
+          "Any income that is not a deal commission"
+        ],
+        "included": [
+          "MTI commissions from deal contracts",
+          "MTI commissions from platform operations that are deals"
+        ],
+        "payment_timing": "Paid only together with actual collection of MTI deal commissions. If MTI collects deal commissions on day 10, the partner is paid on day 10. If MTI does not collect, the partner receives zero.",
+        "no_advance": true,
+        "no_fixed_monthly": true,
+        "example": "Total deal commissions collected in a month = 20000, subscriptions collected = 2000 NOT included, partner share = 3 percent x 20000 = 600, not 3 percent x 22000"
+      },
+      "scope_all_accounting_from_a_to_z": {
+        "inside_platform": [
+          "Electronic accounting system on the platform - every movement recorded at the moment it happens",
+          "MTI chart of accounts",
+          "Separate account for each: legal partner 3 percent, accounting partner 3 percent, MTI 94 percent",
+          "Electronic invoice approved by Taxes - E-Invoice",
+          "Review on all platform levels: deal, client, product, HS code, country, whole platform"
+        ],
+        "outside_platform": [
+          "Deal with the bank: account opening, Escrow account, signatures, documents",
+          "Deal with Escrow system: deposit, release, Escrow fee",
+          "Reconciliation with banks in general: match bank statement with MTI accounts, monthly and per deal",
+          "Deal with information partners: reconcile their commissions - what is due to them and what is due from them"
+        ],
+        "record_all_incoming": [
+          "MTI commission from every deal",
+          "Subscription income from exporters and importers on the platform",
+          "Any other MTI income"
+        ],
+        "record_all_outgoing": [
+          "Legal partner commission 3 percent",
+          "Accounting partner commission 3 percent",
+          "Information partners commissions per each partner agreement",
+          "Bank and Escrow fees",
+          "Any other outgoing commission from MTI"
+        ],
+        "record_salaries": [
+          "Monthly salaries of MTI team",
+          "Bonuses, allowances",
+          "Insurance, payroll tax"
+        ],
+        "record_subscriptions": [
+          "Incoming subscriptions from exporters and importers",
+          "Outgoing subscriptions: systems, servers, software, tools, licences"
+        ],
+        "budgets_and_statements": [
+          "Approved balance sheet for Taxes and Banks",
+          "Income statement: income, costs, net",
+          "Cash flow statement",
+          "Forecast budget: monthly, quarterly, yearly",
+          "Actual vs budget comparison, variance, reason"
+        ]
+      },
+      "does_not_do": [
+        "No legal review of a contract",
+        "No legal opinion"
+      ],
+      "own_approved_system": "The accounting partner works under the partner's own approved accounting system: electronic ledger, stamped statements, documented approvals that are recognized by the State, official authorities, banks, and global and international bodies. The system must be formally approved by Taxes and Banks.",
+      "assistant_flow": [
+        "Assistant prepares the accounting question and the file",
+        "Assistant delivers to the accounting partner only the accounting part",
+        "Accounting partner returns a written opinion or approval within 48 working hours",
+        "Assistant executes and records the result in the core",
+        "For outside work, accounting partner deals with the bank, reconciles, and reports the result to the Assistant, and the Assistant records it"
+      ],
+      "examples": [
+        {
+          "deal": "Ceramic 100000 USD",
+          "mti_commission_pct": 6,
+          "accounting_partner_3pct": 180,
+          "total_deal_commissions_collected": 6000,
+          "mti_retained_before_operating_costs": 5640
+        },
+        {
+          "deal": "Tomato paste 47500 USD",
+          "mti_commission_pct": 7,
+          "accounting_partner_3pct": 99.75,
+          "total_deal_commissions_collected": 3325,
+          "mti_retained_before_operating_costs": 3125.5
+        },
+        {
+          "deal": "T-Shirt 480000 USD",
+          "mti_commission_pct": 10,
+          "accounting_partner_3pct": 1440,
+          "total_deal_commissions_collected": 48000,
+          "mti_retained_before_operating_costs": 45120
+        }
+      ]
+    },
+    "total_core_base": "Total deal commissions collected from deal contracts only - not total income, not net profit"
+  },
+  "cooperation": {
+    "rule": "Cooperation, not overlap. Each partner stays in the partner's own task, and both cooperate to ease platform work.",
+    "joint_cases": [
+      {
+        "case": "New Escrow contract",
+        "legal_partner": "Review the contract legally",
+        "accounting_partner": "Review the contract from accounting side and link it to the bank",
+        "result": "One contract, signed by both, correct legally and from accounting side",
+        "coordinator": "Assistant"
+      },
+      {
+        "case": "New deal",
+        "legal_partner": "Review the deal contract",
+        "accounting_partner": "Record MTI commission, compute 3 percent plus 3 percent on total deal commissions collected only, reconcile with bank",
+        "result": "Deal moves legally and from accounting side together",
+        "coordinator": "Assistant"
+      },
+      {
+        "case": "Report to the bank",
+        "legal_partner": "Prepare the legal cover",
+        "accounting_partner": "Prepare the budget and statements",
+        "result": "One report, legal plus accounting, accepted by the bank",
+        "coordinator": "Assistant"
+      }
+    ]
+  },
+  "data_model": {
+    "task": {
+      "fields": [
+        "task_id",
+        "task_type (legal | accounting | joint)",
+        "title",
+        "deal_id",
+        "product_id",
+        "file_ref",
+        "status (new | routed | waiting_partner | approved | rejected | executed)",
+        "assigned_partner",
+        "created_at",
+        "partner_reply_at",
+        "executed_at"
+      ]
+    },
+    "partner_opinion": {
+      "fields": [
+        "opinion_id",
+        "task_id",
+        "partner_id",
+        "opinion_type (opinion | approval | rejection)",
+        "text",
+        "stamp_ref",
+        "approved_system_ref",
+        "created_at"
+      ]
+    },
+    "commission_record": {
+      "fields": [
+        "deal_id",
+        "gross_deal_value",
+        "mti_commission_pct",
+        "total_deal_commissions_collected",
+        "legal_partner_3pct_on_total_deal_commissions",
+        "accounting_partner_3pct_on_total_deal_commissions",
+        "mti_retained_before_operating_costs",
+        "collection_date",
+        "bank_ref",
+        "status (pending_collection | collected | paid_to_partners)"
+      ]
+    },
+    "ledger_entry": {
+      "fields": [
+        "entry_id",
+        "date",
+        "account",
+        "debit",
+        "credit",
+        "deal_id",
+        "partner_id",
+        "bank_ref",
+        "invoice_ref",
+        "recorded_by"
+      ]
+    }
+  },
+  "api_events": [
+    {
+      "event": "task.created",
+      "payload": "task_id, task_type, deal_id"
+    },
+    {
+      "event": "task.routed",
+      "payload": "task_id, assigned_partner"
+    },
+    {
+      "event": "partner.opinion_received",
+      "payload": "task_id, partner_id, opinion_type"
+    },
+    {
+      "event": "commission.collected",
+      "payload": "deal_id, total_deal_commissions_collected, bank_ref"
+    },
+    {
+      "event": "commission.split_created",
+      "payload": "deal_id, legal_3pct, accounting_3pct, mti_retained_before_operating_costs"
+    }
+  ],
+  "security_and_privacy": {
+    "data_never_sold": true,
+    "data_use": "Paid services only",
+    "access": "Each partner sees only what concerns that partner",
+    "log": "Every action is logged and immutable"
+  },
+  "commission_base_correction_2026_11_06": "Correction: 3 percent is on total deal commissions collected from deal contracts - commissions on deals or platform operations only. NOT on total income. NOT on net profit. Subscriptions are NOT included. The base is before any deduction."
+}

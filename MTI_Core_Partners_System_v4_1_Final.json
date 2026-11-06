@@ -1,0 +1,1084 @@
+{
+  "metadata": {
+    "program": "MTI Core Partners System",
+    "file": "MTI_Core_Partners_System_v4_1_Final.json",
+    "version": "4.1",
+    "language": "en",
+    "status": "Final - Professional - English only - For programmer - Documented delivery v4.1",
+    "created": "2026-11-06",
+    "last_revision": "2026-11-06 - v4.1 - Documentation only: added delivery block with bundle version, delivery date, recipient, and delivery checklist reference. No rule change from v4.0.",
+    "owner": "MTI - Farag Ali",
+    "audience": "Platform owner, platform developer, legal partner, accounting partner, auditor, clients",
+    "usage": "Keep this file as the single source of truth for the MTI core partners system. Version 4.0 covers everything built in the app. Any implementation must follow this file.",
+    "changelog": [
+      "v1.0 - Initial partners system",
+      "v2.0 - Commission base corrected: 3 percent on total deal commissions collected from deal contracts only, not total income, not net profit",
+      "v3.0 - Code-based entry via Personal Assistant. Code decides path. First-time client with no code. Returning client with last deal code. Partners with partner codes.",
+      "v4.0 - Identity card after code entry, password 8 chars created by the user, work hub with 7 actions, notifications center, account settings, full activity log, final review, first-time guest graphic landing with B2B B2C C2C, membership issue and approval",
+      "v4.1 - Documentation only: added delivery block. Bundle version MTI-DELIVERY-2026-001, delivery date 2026-11-06, recipient to be filled by owner, checklist MTI_Delivery_Checklist_For_Programmer.pdf. No rule change from v4.0."
+    ]
+  },
+  "summary": {
+    "what_this_system_is": "A background system that runs inside the MTI platform core. It is driven by the Personal Assistant. The Personal Assistant is the single entry point for every person. It reads the code, shows the identity card, asks for the password, then opens the work hub for that identity.",
+    "what_this_system_is_not": "This system does not replace the legal partner. It does not replace the accounting partner. It does not replace the auditor. It does not give legal opinions. It does not give accounting opinions. It coordinates, routes, records, and computes.",
+    "scope": "MTI platform only. This file covers the Fintech Lawyer partner, the Accountant and Auditor partner, and all client entry paths B2B, B2C, C2C for the MTI platform only."
+  },
+  "principles": {
+    "partners_system": "One partner per task. One task per partner. No two partners do the same work. No overlap.",
+    "halal_only": "MTI works halal only.",
+    "data_rule": "Data is never sold. Data is used as paid services only.",
+    "documentation_rule": "No verbal work. Every task is written, stamped, recorded, and stored in the core.",
+    "official_framework": "All partner work runs inside a legal and accounting framework that is formally recognized by the State, official authorities, banks, and global and international bodies.",
+    "code_decides_path": "Code decides path. Personal Assistant reads the code first, then opens the path. No code means guest path only. A wrong code means no entry.",
+    "one_session_one_code_one_path": "One session uses one code and one path. To change role, close the session and enter again with the other code."
+  },
+  "definitions": {
+    "deal": "A closed transaction executed through a deal contract on the MTI platform.",
+    "deal_contract": "The signed contract that defines a deal, its value, and the MTI commission for that deal.",
+    "deal_commission": "The MTI commission stated in a deal contract for one deal.",
+    "total_deal_commissions_collected": "The sum of all MTI deal commissions actually collected from deal contracts in a given period. This is the ONLY base for the 3 percent partner shares.",
+    "platform_operation": "A platform operation that is a deal under a deal contract. Only deal-type operations count toward the base.",
+    "subscription": "A recurring platform subscription paid by an exporter or importer. Subscriptions are NOT deal commissions and are NOT part of the base.",
+    "total_income": "All income of MTI from all sources. Total income is NOT the base.",
+    "net_profit": "MTI income after all costs. Net profit is NOT the base.",
+    "membership": "An approved account on MTI with a code and a password. Membership is created at first entry and approved on the platform. It is used for every later entry.",
+    "identity_card": "A graphic card shown after code entry with full identity: name, company or institution, official entity, role, code, member since, status."
+  },
+  "commission_base": {
+    "rule": "Each partner receives 3 percent of total deal commissions collected from deal contracts - commissions on deals or platform operations that are deals only.",
+    "base": "total_deal_commissions_collected",
+    "base_formula": "partner_share = 0.03 * total_deal_commissions_collected",
+    "core_total_formula": "core_total = 0.06 * total_deal_commissions_collected",
+    "mti_retained_formula_before_operating_costs": "mti_retained = 0.94 * total_deal_commissions_collected",
+    "timing": "Before any deduction. The base is measured before bank charges, taxes, salaries, subscriptions payable, Escrow fees, or any other cost.",
+    "payment_timing": "Each partner is paid only together with actual collection of MTI deal commissions. If MTI collects deal commissions on day 10, the partner is paid on day 10. If MTI does not collect, the partner receives zero.",
+    "no_advance": true,
+    "no_fixed_monthly_fee": true,
+    "included": [
+      "MTI commissions from deal contracts",
+      "MTI commissions from platform operations that are deals under a deal contract"
+    ],
+    "excluded": [
+      "Subscription income",
+      "Total income",
+      "Net profit",
+      "Any income that is not a deal commission"
+    ],
+    "worked_example": {
+      "period": "One month",
+      "total_deal_commissions_collected": 20000,
+      "subscriptions_collected_not_included": 2000,
+      "legal_partner_share": 600,
+      "accounting_partner_share": 600,
+      "core_total": 1200,
+      "mti_retained_before_operating_costs": 18800,
+      "note": "The partner share is 3 percent x 20000 = 600. It is NOT 3 percent x 22000. Subscriptions are recorded by the accounting partner but do not enter the base."
+    }
+  },
+  "platform": {
+    "name": "MTI",
+    "full_name": "MTI - Multi Trade International",
+    "owner": "Farag Ali",
+    "products": [
+      {
+        "product_id": "MTI-P001",
+        "name": "Ceramic Floor Tiles 60x60",
+        "hs_code_6": "690721",
+        "mti_deal_commission_pct": 6
+      },
+      {
+        "product_id": "MTI-P002",
+        "name": "Porcelain 60x120",
+        "hs_code_6": "690721",
+        "mti_deal_commission_pct": 7
+      },
+      {
+        "product_id": "MTI-P003",
+        "name": "Tomato Paste 36/38 Brix",
+        "hs_code_6": "200290",
+        "mti_deal_commission_pct": 7
+      },
+      {
+        "product_id": "MTI-P004",
+        "name": "Cotton T-Shirt",
+        "hs_code_6": "610910",
+        "mti_deal_commission_pct": 10
+      },
+      {
+        "product_id": "MTI-P005",
+        "name": "Extra Virgin Olive Oil",
+        "hs_code_6": "151910",
+        "mti_deal_commission_pct": 8
+      },
+      {
+        "product_id": "MTI-P006",
+        "name": "Beech Wood Chair",
+        "hs_code_6": "940161",
+        "mti_deal_commission_pct": 9
+      }
+    ]
+  },
+  "access_control": {
+    "principle": "Code decides path. Personal Assistant reads the code first, then opens the path. No code means guest path only. A wrong code means no entry.",
+    "personal_assistant": {
+      "role": "Gate and coordinator. The Personal Assistant is the single entry point for every person. It reads the code, shows the identity card, asks for the password, opens the work hub, routes tasks, sends notifications, and records every step.",
+      "duties": [
+        "Ask for a code at entry. Accept empty code only for first-time guest.",
+        "Read the code and resolve identity: guest, client, legal partner, accountant partner, auditor, owner.",
+        "Show the identity card for that identity.",
+        "Ask for the password created by that person.",
+        "Open the work hub for that identity.",
+        "Show only what belongs to that identity. Never show another identity path.",
+        "Route each task by code and task_type, never by name typed by hand.",
+        "Send notifications from Personal Assistant to each identity.",
+        "Record entry, code used, identity shown, password result, path opened, and every action in the audit log."
+      ],
+      "entry_steps": [
+        "Step 1 - Person opens Personal Assistant.",
+        "Step 2 - Assistant asks: Enter your code, or continue as first-time guest with no code.",
+        "Step 3 - Assistant validates the code format and checks it in the core.",
+        "Step 4 - Assistant shows the identity card for that code.",
+        "Step 5 - Assistant asks for the password created by that person.",
+        "Step 6 - Assistant opens the work hub for that identity.",
+        "Step 7 - Person continues from where that person wants: view, update, new deal, follow works, accounts, documents, notifications.",
+        "Step 8 - Assistant records entry and every action."
+      ]
+    },
+    "code_format": {
+      "pattern": "MTI-<ROLE>-<NUMBER>",
+      "examples": [
+        "MTI-DEAL-2026-001",
+        "MTI-LEGAL-001",
+        "MTI-ACCT-001",
+        "MTI-AUDIT-001",
+        "MTI-OWNER-001"
+      ],
+      "rules": [
+        "Code is issued by MTI core only. No one creates a code by hand.",
+        "One code maps to one identity and one path. Codes are never shared between identities.",
+        "A deal code maps to one client and one deal history. It reopens that client saved path.",
+        "A partner code maps to one partner office and one partner role. Legal, accounting, and audit codes are separate even if one office holds two roles.",
+        "Codes can be revoked by MTI owner. A revoked code opens nothing.",
+        "Every code use is logged: code, time, identity, path opened."
+      ]
+    },
+    "identity_card": {
+      "shown_after": "After code entry, before password, before work hub",
+      "fields": [
+        "Full name",
+        "Company or institution name",
+        "Official entity (Customs / Taxes / Bank / FRA / other)",
+        "Role",
+        "Code used",
+        "Path that will open",
+        "Member since",
+        "Status (active / inactive)"
+      ],
+      "examples": [
+        {
+          "code": "MTI-DEAL-2026-001",
+          "name": "Farag Mohamed Ali",
+          "company": "Al Shams Company",
+          "official_entity": "Taxes",
+          "role": "Client - Exporter",
+          "member_since": "2025",
+          "status": "active"
+        },
+        {
+          "code": "MTI-LEGAL-001",
+          "name": "Fintech Lawyer Office",
+          "company": "Fintech Lawyer Office",
+          "official_entity": "FRA",
+          "role": "Legal Partner",
+          "member_since": "2026",
+          "status": "active"
+        },
+        {
+          "code": "MTI-ACCT-001",
+          "name": "Accounting Office",
+          "company": "Accounting Office",
+          "official_entity": "Taxes",
+          "role": "Accounting Partner",
+          "member_since": "2026",
+          "status": "active"
+        },
+        {
+          "code": "MTI-AUDIT-001",
+          "name": "Audit Office",
+          "company": "Audit Office",
+          "official_entity": "Taxes",
+          "role": "Auditor",
+          "member_since": "2026",
+          "status": "active"
+        },
+        {
+          "code": "MTI-OWNER-001",
+          "name": "Farag Ali",
+          "company": "MTI - Multi Trade International",
+          "official_entity": "Owner",
+          "role": "Owner",
+          "member_since": "2025",
+          "status": "active"
+        }
+      ]
+    },
+    "password": {
+      "rule": "Password is created by the person, not by MTI. It is created at first entry and used for every later entry.",
+      "length": 8,
+      "difficulty": "Medium: must contain at least one letter, one number, one symbol",
+      "exact_length": "Exactly 8 characters",
+      "first_time_flow": [
+        "First-time pioneer creates a password at first entry.",
+        "Password form shows live strength meter: weak / medium / strong.",
+        "Password form shows live checklist: 8 chars, letter, number, symbol.",
+        "Confirm password field must match.",
+        "On save, password is stored in core for that code and membership is marked password set."
+      ],
+      "returning_flow": [
+        "Returning person enters the password created earlier.",
+        "Show and hide password eye button.",
+        "Wrong password shows: password wrong, try again.",
+        "After 3 wrong tries, session is locked and person must enter code again.",
+        "Forgot password link: reset via owner code MTI-OWNER-001."
+      ],
+      "change_password": "In account settings: old password, new password exactly 8 chars with letter + number + symbol, confirm password, live checklist, button change password. On success show: password changed."
+    },
+    "work_hub": {
+      "shown_after": "After correct password",
+      "cards": [
+        {
+          "action": "view",
+          "label": "View only"
+        },
+        {
+          "action": "update_my_data",
+          "label": "Update my data"
+        },
+        {
+          "action": "new_deal",
+          "label": "New deal"
+        },
+        {
+          "action": "follow_my_works",
+          "label": "Follow my works on the platform"
+        },
+        {
+          "action": "my_accounts",
+          "label": "My accounts"
+        },
+        {
+          "action": "my_documents",
+          "label": "My documents"
+        },
+        {
+          "action": "notifications",
+          "label": "Notifications"
+        }
+      ],
+      "rule": "Person continues from where that person wants. Work hub does not force one path."
+    },
+    "entry_types": [
+      {
+        "entry": "First-time client - NO CODE",
+        "code": null,
+        "who": "A person who has never used MTI before",
+        "assistant_action": "Open guest graphic landing page only. Show promo cards, show B2B B2C C2C choices, start membership flow. Do NOT open any saved path. Do NOT show any other client data.",
+        "path_opened": "guest_path",
+        "after_first_deal": "Core issues a deal code for that client, for example MTI-DEAL-2026-001. That code becomes the key for every later entry."
+      },
+      {
+        "entry": "Returning client - LAST DEAL CODE",
+        "code": "MTI-DEAL-2026-001",
+        "who": "A client who already has a deal on MTI",
+        "assistant_action": "Read the deal code, show identity card, ask for password, load the saved personal path for that client: past deals, files, approvals, next steps. Continue from where that client stopped.",
+        "path_opened": "client_path"
+      },
+      {
+        "entry": "Legal partner - LEGAL CODE",
+        "code": "MTI-LEGAL-001",
+        "who": "Fintech Lawyer partner",
+        "assistant_action": "Read the legal code, show identity card, ask for password, open legal path only: legal tasks, contracts to review, legal approvals to give. Hide accounting tasks and other client paths.",
+        "path_opened": "legal_partner_path",
+        "tasks_shown": "Legal tasks only"
+      },
+      {
+        "entry": "Accountant partner - ACCOUNTING CODE",
+        "code": "MTI-ACCT-001",
+        "who": "Accountant partner - accounting work",
+        "assistant_action": "Read the accounting code, show identity card, ask for password, open accounting path only: accounting tasks, ledger entries, bank reconciliation, commission records to confirm.",
+        "path_opened": "accounting_partner_path",
+        "tasks_shown": "Accounting tasks only"
+      },
+      {
+        "entry": "Auditor - AUDIT CODE",
+        "code": "MTI-AUDIT-001",
+        "who": "Auditor - audit work, separate from daily accounting",
+        "assistant_action": "Read the audit code, show identity card, ask for password, open audit path only: audit tasks, statements to audit, review on all platform levels. Audit code is separate from accounting code even if the same office holds both roles.",
+        "path_opened": "audit_path",
+        "tasks_shown": "Audit tasks only",
+        "separation_rule": "Accounting code and audit code are separate. The same office must enter with the correct code for the work it will do in that session. A session opened with MTI-ACCT-001 cannot approve an audit. A session opened with MTI-AUDIT-001 cannot post a daily entry."
+      },
+      {
+        "entry": "MTI owner - OWNER CODE",
+        "code": "MTI-OWNER-001",
+        "who": "MTI - Farag Ali",
+        "assistant_action": "Read the owner code, show identity card, ask for password, open owner path: full view, all paths, all tasks, code issue and revoke, partner management.",
+        "path_opened": "owner_path"
+      }
+    ],
+    "path_matrix": {
+      "guest_path": {
+        "sees": [
+          "Graphic landing, promo cards, B2B B2C C2C choices, start membership"
+        ],
+        "cannot_see": [
+          "Any client path",
+          "Any partner task",
+          "Ledger",
+          "Contracts of others"
+        ]
+      },
+      "client_path": {
+        "sees": [
+          "Own deals",
+          "Own files",
+          "Own approvals",
+          "Next steps for own deals"
+        ],
+        "cannot_see": [
+          "Other clients",
+          "Partner tasks",
+          "Ledger",
+          "Other contracts"
+        ]
+      },
+      "legal_partner_path": {
+        "sees": [
+          "Legal tasks assigned to legal partner",
+          "Contracts to review",
+          "Legal approvals",
+          "Legal files"
+        ],
+        "cannot_see": [
+          "Accounting entries",
+          "Audit tasks",
+          "Other client paths"
+        ]
+      },
+      "accounting_partner_path": {
+        "sees": [
+          "Accounting tasks",
+          "Ledger entries",
+          "Bank reconciliation",
+          "Commission records",
+          "Accounting files"
+        ],
+        "cannot_see": [
+          "Legal opinions",
+          "Audit approvals",
+          "Other client paths"
+        ]
+      },
+      "audit_path": {
+        "sees": [
+          "Audit tasks",
+          "Statements to audit",
+          "Review on all platform levels",
+          "Audit files"
+        ],
+        "cannot_see": [
+          "Daily accounting posting",
+          "Legal opinions"
+        ]
+      },
+      "owner_path": {
+        "sees": [
+          "All paths",
+          "All tasks",
+          "Code issue and revoke",
+          "Dashboard",
+          "Reports",
+          "Full log",
+          "Final review"
+        ],
+        "cannot_see": []
+      }
+    },
+    "session_model": {
+      "session_fields": [
+        "session_id",
+        "code_used",
+        "identity_resolved",
+        "role",
+        "path_opened",
+        "entered_at",
+        "last_action_at",
+        "status (active | closed | locked)"
+      ],
+      "rule": "One session uses one code and one path. To change role, close the session and enter again with the other code.",
+      "example": "An office that holds both accounting and audit roles opens MTI-ACCT-001 for daily accounting, closes it, then opens MTI-AUDIT-001 for audit work. The two sessions are logged separately."
+    }
+  },
+  "first_time_guest_landing": {
+    "entry": "First-time client with no code opens graphic landing page",
+    "banner": "Large gradient banner: MTI - Multi Trade International",
+    "promo_cards": [
+      {
+        "product": "Ceramic",
+        "hs_code_6": "690721",
+        "mti_deal_commission_pct": 6
+      },
+      {
+        "product": "Tomato Paste",
+        "hs_code_6": "200290",
+        "mti_deal_commission_pct": 7
+      },
+      {
+        "product": "Cotton T-Shirt",
+        "hs_code_6": "610910",
+        "mti_deal_commission_pct": 10
+      }
+    ],
+    "choices": [
+      {
+        "choice": "B2B",
+        "meaning": "Business to Business - company to company",
+        "needs": [
+          "Commercial register",
+          "Tax card",
+          "Bank letter",
+          "Company profile"
+        ],
+        "path": "Company file, deals, contracts, Escrow"
+      },
+      {
+        "choice": "B2C",
+        "meaning": "Business to Customer - company to customer",
+        "needs": [
+          "Company data",
+          "Product catalog",
+          "Price list",
+          "Delivery info"
+        ],
+        "path": "Product page, orders, customer follow up"
+      },
+      {
+        "choice": "C2C",
+        "meaning": "Customer to Customer - person to person",
+        "needs": [
+          "National ID",
+          "Phone",
+          "Email",
+          "Personal profile"
+        ],
+        "path": "Personal file, small deals, personal documents"
+      }
+    ],
+    "membership_flow": [
+      "Step 1 - Data form: name, company or person name, country, phone, email, official entity select Customs / Taxes / Bank / other",
+      "Step 2 - Needed documents checklist with checkboxes for the chosen path B2B / B2C / C2C",
+      "Step 3 - Core issues a new code MTI-DEAL-2026-00X, shown large in a membership card with name, path B2B / B2C / C2C, member since 2026, status approved",
+      "Step 4 - Person creates password exactly 8 chars with letter + number + symbol, confirms it, saves membership",
+      "Step 5 - Membership is approved on the platform. Success message: membership approved - use code and password for later entry.",
+      "Step 6 - Button entry with new code jumps back to login with the new code prefilled."
+    ]
+  },
+  "notifications": {
+    "importance": "Very important. Notifications are how Personal Assistant keeps every identity informed without searching.",
+    "sender": "Personal Assistant",
+    "center": "Bell icon in header with unread count. Notifications panel with filter: All / Unread / Read. Button mark all as read.",
+    "per_identity_examples": {
+      "client": [
+        "Personal Assistant: your contract was reviewed legally",
+        "Personal Assistant: your commission was recorded",
+        "Personal Assistant: bank needs a document"
+      ],
+      "legal": [
+        "New task for review",
+        "Escrow contract waits for your approval"
+      ],
+      "accounting": [
+        "Bank reconciliation done",
+        "New commission entered"
+      ],
+      "audit": [
+        "Audit report ready"
+      ],
+      "owner": [
+        "New code created",
+        "Partner replied to a task"
+      ]
+    },
+    "auto_notifications": [
+      "Task approval creates a notification for the relevant identity.",
+      "Code issue creates a notification for the owner and the new member.",
+      "Code revoke creates a notification for the owner.",
+      "Deal close creates a notification for the client and the owner.",
+      "File decision creates a notification for the relevant identity."
+    ],
+    "manual_notifications": "Owner can send a notification: select recipient code, write text, send. Sent notification appears in recipient notifications with sender Personal Assistant, time now, unread.",
+    "fields": [
+      "notification_id",
+      "recipient_code",
+      "sender (Personal Assistant)",
+      "text",
+      "time",
+      "status (unread | read)",
+      "related_task_id",
+      "related_deal_id"
+    ]
+  },
+  "account_settings": {
+    "page": "My account tab in header and in work hub",
+    "shows": [
+      "Name",
+      "Company",
+      "Official entity (Customs / Taxes / Bank / FRA / other)",
+      "Role",
+      "Code",
+      "Member since"
+    ],
+    "update_data": "Form to update company name, official entity select, phone, email. Button save update saves to core store and records in log.",
+    "change_password": "Form: old password, new password exactly 8 chars with letter + number + symbol, confirm password, live checklist, button change password. On success show: password changed.",
+    "deactivate": "Button deactivate my account sets status inactive and blocks login until owner reactivates."
+  },
+  "core_engine": {
+    "location": "Inside the MTI platform core",
+    "mode": "Background service. It runs continuously, without user action, and wakes on events.",
+    "assistant": {
+      "role": "Coordinator only. The Assistant does not give a legal opinion and does not give an accounting opinion.",
+      "sla_hours": 48,
+      "duties": [
+        "Ask for a code at entry. Accept empty code only for first-time guest.",
+        "Read the code, resolve identity, show identity card, ask for password, open work hub.",
+        "Show only what belongs to that identity.",
+        "Prepare the question or file for the correct partner only.",
+        "Deliver to each partner only what concerns that partner.",
+        "Collect the partner opinion or approval.",
+        "Execute the approved result and record it in the core.",
+        "Coordinate between partners so no task is lost between them.",
+        "Send notifications from Personal Assistant to each identity.",
+        "Route every task by code and task_type, never by name typed by hand."
+      ],
+      "routing_rules": [
+        "If task_type is legal, route to legal_partner only.",
+        "If task_type is accounting, route to accounting_partner only.",
+        "If task_type is joint, route to both partners in parallel, then merge both approvals.",
+        "Never route a legal task to the accounting partner.",
+        "Never route an accounting task to the legal partner."
+      ]
+    },
+    "background_jobs": [
+      {
+        "job": "event_listener",
+        "trigger": "New deal, new contract, new invoice, new payment, new subscription, new partner message",
+        "action": "Create a task in the core queue."
+      },
+      {
+        "job": "router",
+        "trigger": "Task created",
+        "action": "Classify task_type and route to the correct partner."
+      },
+      {
+        "job": "reminder",
+        "trigger": "48 hours without partner reply",
+        "action": "Remind the partner and notify the MTI owner."
+      },
+      {
+        "job": "commission_engine",
+        "trigger": "Actual collection of MTI deal commissions confirmed by bank",
+        "action": "Compute total deal commissions collected from deal contracts, compute 3 percent for each partner on that total only, create payable records."
+      },
+      {
+        "job": "reconciliation",
+        "trigger": "Daily and monthly",
+        "action": "Match bank statement with core ledger and flag any difference."
+      },
+      {
+        "job": "audit_log",
+        "trigger": "Every action",
+        "action": "Write an immutable log: who, what, when, file, approval."
+      },
+      {
+        "job": "code_validator",
+        "trigger": "Code entered in Personal Assistant",
+        "action": "Validate code format, check revocation, resolve identity, show identity card, ask for password, load saved path, log entry."
+      },
+      {
+        "job": "notification_sender",
+        "trigger": "Task approval, code issue, code revoke, deal close, file decision",
+        "action": "Create a notification from Personal Assistant to the relevant identity."
+      }
+    ],
+    "task_lifecycle": [
+      "new",
+      "routed",
+      "waiting_partner",
+      "approved",
+      "rejected",
+      "executed",
+      "closed"
+    ]
+  },
+  "partners": {
+    "rule": "One partner per task. One task per partner.",
+    "core_total_pct_on_total_deal_commissions_collected": 6,
+    "mti_retained_pct_before_operating_costs": 94,
+    "legal_partner": {
+      "id": "legal_partner",
+      "title": "Fintech Lawyer Partner",
+      "engagement": "Contractor for all legal affairs of the platform, by specialization",
+      "contract_type": "Long-term contracting contract for all legal affairs - by specialization",
+      "duration": "3 years, auto-renewed, 90 days termination notice",
+      "entry_code": "MTI-LEGAL-001",
+      "commission": {
+        "pct": 3,
+        "base": "total_deal_commissions_collected",
+        "payment_timing": "Paid only together with actual collection of MTI deal commissions. If MTI does not collect, the partner receives zero.",
+        "no_advance": true,
+        "no_fixed_monthly_fee": true
+      },
+      "scope": {
+        "all_legal_affairs": [
+          "All platform contracts: exporters, importers, information partners, Escrow, subscriptions",
+          "Compliance: Central Bank of Egypt (CBE), Financial Regulatory Authority (FRA), Data Protection Law, E-Commerce Law",
+          "Platform licences: registration, commercial register, tax",
+          "Disputes: arbitration and settlement",
+          "Data policy: data is never sold, data is used as paid services only",
+          "Any legal matter of the platform - the legal partner is solely responsible for it"
+        ],
+        "does_not_do": [
+          "No accounting entry",
+          "No bank reconciliation",
+          "No accounting opinion"
+        ]
+      },
+      "own_approved_system": "The legal partner works under the partner's own approved legal system: written opinions, stamped contracts, documented approvals recognized by the State, official authorities, banks, and global and international bodies.",
+      "assistant_flow": [
+        "Assistant prepares the legal question and the file.",
+        "Assistant delivers to the legal partner only the legal part.",
+        "Legal partner returns a written opinion or approval within 48 working hours.",
+        "Assistant executes and records the result in the core."
+      ],
+      "files": [
+        "Deal contract DEAL-2026-001",
+        "Escrow contract",
+        "Subscription contract",
+        "Legal opinion CBE FRA"
+      ]
+    },
+    "accounting_partner": {
+      "id": "accounting_partner",
+      "title": "Accountant and Auditor Partner",
+      "engagement": "Contractor for all accounting work of the platform, from A to Z, with an electronic system",
+      "contract_type": "Long-term contracting contract for all accounting work - from A to Z - with an electronic system",
+      "duration": "3 years, auto-renewed, 90 days termination notice",
+      "qualification": "Licensed legal accountant, registered, with experience in information systems and banks. Electronic system, not paper work.",
+      "entry_codes": [
+        "MTI-ACCT-001 for accounting work",
+        "MTI-AUDIT-001 for audit work - separate session"
+      ],
+      "commission": {
+        "pct": 3,
+        "base": "total_deal_commissions_collected",
+        "payment_timing": "Paid only together with actual collection of MTI deal commissions. If MTI does not collect, the partner receives zero.",
+        "no_advance": true,
+        "no_fixed_monthly_fee": true
+      },
+      "scope": {
+        "all_accounting_work_from_a_to_z": {
+          "inside_platform": [
+            "Electronic accounting system on the platform - every movement recorded at the moment it happens",
+            "MTI chart of accounts",
+            "Separate account for each: legal partner 3 percent, accounting partner 3 percent, MTI 94 percent",
+            "Electronic invoice approved by Taxes - E-Invoice",
+            "Review on all platform levels: deal, client, product, HS code, country, whole platform"
+          ],
+          "outside_platform": [
+            "Deal with the bank: account opening, Escrow account, signatures, documents",
+            "Deal with Escrow system: deposit, release, Escrow fee",
+            "Reconciliation with banks in general: match bank statement with MTI accounts, monthly and per deal",
+            "Deal with information partners: reconcile their commissions - what is due to them and what is due from them"
+          ],
+          "record_all_incoming": [
+            "MTI commission from every deal",
+            "Subscription income from exporters and importers on the platform",
+            "Any other MTI income"
+          ],
+          "record_all_outgoing": [
+            "Legal partner commission 3 percent on total deal commissions collected",
+            "Accounting partner commission 3 percent on total deal commissions collected",
+            "Information partners commissions per each partner agreement",
+            "Bank and Escrow fees",
+            "Any other outgoing commission from MTI"
+          ],
+          "record_salaries": [
+            "Monthly salaries of MTI team",
+            "Bonuses, allowances",
+            "Insurance, payroll tax"
+          ],
+          "record_subscriptions": [
+            "Incoming subscriptions from exporters and importers",
+            "Outgoing subscriptions: systems, servers, software, tools, licences"
+          ],
+          "budgets_and_statements": [
+            "Approved balance sheet for Taxes and Banks",
+            "Income statement: income, costs, net",
+            "Cash flow statement",
+            "Forecast budget: monthly, quarterly, yearly",
+            "Actual vs budget comparison, variance, reason"
+          ]
+        },
+        "does_not_do": [
+          "No legal review of a contract",
+          "No legal opinion"
+        ]
+      },
+      "own_approved_system": "The accounting partner works under the partner's own approved accounting system: electronic ledger, stamped statements, documented approvals recognized by the State, official authorities, banks, and global and international bodies. The system must be formally approved by Taxes and Banks.",
+      "assistant_flow": [
+        "Assistant prepares the accounting question and the file.",
+        "Assistant delivers to the accounting partner only the accounting part.",
+        "Accounting partner returns a written opinion or approval within 48 working hours.",
+        "Assistant executes and records the result in the core.",
+        "For outside work, the accounting partner deals with the bank, reconciles, and reports the result to the Assistant, and the Assistant records it."
+      ],
+      "files": {
+        "accounting": [
+          "Daily ledger",
+          "Bank statement",
+          "E-Invoice",
+          "Monthly budget"
+        ],
+        "audit": [
+          "Audit of balance sheet",
+          "Audit of deal commissions base",
+          "Audit of daily entries",
+          "Audit of bank reconciliation",
+          "Audit of subscriptions outside base"
+        ]
+      }
+    }
+  },
+  "cooperation": {
+    "rule": "Cooperation, not overlap. Each partner stays in the partner's own task, and both cooperate to ease platform work.",
+    "joint_cases": [
+      {
+        "case": "New Escrow contract",
+        "legal_partner": "Review the contract legally.",
+        "accounting_partner": "Review the contract from the accounting side and link it to the bank.",
+        "result": "One contract, signed by both, correct legally and from the accounting side.",
+        "coordinator": "Assistant"
+      },
+      {
+        "case": "New deal",
+        "legal_partner": "Review the deal contract.",
+        "accounting_partner": "Record the MTI commission, compute 3 percent plus 3 percent on total deal commissions collected only, reconcile with bank.",
+        "result": "Deal moves legally and from the accounting side together.",
+        "coordinator": "Assistant"
+      },
+      {
+        "case": "Report to the bank",
+        "legal_partner": "Prepare the legal cover.",
+        "accounting_partner": "Prepare the budget and statements.",
+        "result": "One report, legal plus accounting, accepted by the bank.",
+        "coordinator": "Assistant"
+      }
+    ]
+  },
+  "owner_dashboard": {
+    "tabs": [
+      "Dashboard",
+      "Code management",
+      "Reports",
+      "Full log",
+      "Final review",
+      "Core"
+    ],
+    "summary_cards": [
+      "Total deal commissions collected",
+      "Core total",
+      "MTI retained",
+      "Active codes count"
+    ],
+    "paths_table": [
+      "Guest",
+      "Client",
+      "Legal",
+      "Accounting",
+      "Audit",
+      "Owner - each with status, last entry, pending tasks count"
+    ],
+    "alerts": [
+      "Escrow contract waits for legal approval",
+      "Bank reconciliation waits for accounting confirmation",
+      "Budget audit waits"
+    ],
+    "code_management": "Owner only. Table: code, role, owner identity, path linked, status active / revoked, issued date. Button issue new code: select role + name, creates MTI-<ROLE>-00X, adds to table, usable in login. Button revoke code toggles to revoked. Revoked codes fail login with: code revoked - no entry.",
+    "reports": "Owner only. Monthly table 6 months: month, total deal commissions collected, legal 3 percent, accounting 3 percent, core total 6 percent, MTI retained 94 percent before operating costs. Yearly summary. Bar chart per month. Export CSV preview with copy."
+  },
+  "examples": [
+    {
+      "deal": "Ceramic 100000 USD",
+      "mti_deal_commission_pct": 6,
+      "total_deal_commissions_collected": 6000,
+      "legal_partner_3pct": 180,
+      "accounting_partner_3pct": 180,
+      "mti_retained_before_operating_costs": 5640
+    },
+    {
+      "deal": "Tomato paste 47500 USD",
+      "mti_deal_commission_pct": 7,
+      "total_deal_commissions_collected": 3325,
+      "legal_partner_3pct": 99.75,
+      "accounting_partner_3pct": 99.75,
+      "mti_retained_before_operating_costs": 3125.5
+    },
+    {
+      "deal": "T-Shirt 480000 USD",
+      "mti_deal_commission_pct": 10,
+      "total_deal_commissions_collected": 48000,
+      "legal_partner_3pct": 1440,
+      "accounting_partner_3pct": 1440,
+      "mti_retained_before_operating_costs": 45120
+    }
+  ],
+  "data_model": {
+    "task": {
+      "fields": [
+        "task_id",
+        "task_type (legal | accounting | joint)",
+        "title",
+        "deal_id",
+        "product_id",
+        "file_ref",
+        "status",
+        "assigned_partner",
+        "created_at",
+        "partner_reply_at",
+        "executed_at"
+      ]
+    },
+    "partner_opinion": {
+      "fields": [
+        "opinion_id",
+        "task_id",
+        "partner_id",
+        "opinion_type (opinion | approval | rejection)",
+        "text",
+        "stamp_ref",
+        "approved_system_ref",
+        "created_at"
+      ]
+    },
+    "commission_record": {
+      "fields": [
+        "deal_id",
+        "gross_deal_value",
+        "mti_deal_commission_pct",
+        "total_deal_commissions_collected",
+        "legal_partner_3pct_on_total_deal_commissions",
+        "accounting_partner_3pct_on_total_deal_commissions",
+        "mti_retained_before_operating_costs",
+        "collection_date",
+        "bank_ref",
+        "status (pending_collection | collected | paid_to_partners)"
+      ]
+    },
+    "ledger_entry": {
+      "fields": [
+        "entry_id",
+        "date",
+        "account",
+        "debit",
+        "credit",
+        "deal_id",
+        "partner_id",
+        "bank_ref",
+        "invoice_ref",
+        "recorded_by"
+      ]
+    },
+    "session": {
+      "fields": [
+        "session_id",
+        "code_used",
+        "identity_resolved",
+        "role",
+        "path_opened",
+        "entered_at",
+        "last_action_at",
+        "status (active | closed | locked)"
+      ]
+    },
+    "code": {
+      "fields": [
+        "code",
+        "code_type (deal | legal | accounting | audit | owner)",
+        "owner_identity",
+        "path_linked",
+        "status (active | revoked)",
+        "issued_at",
+        "revoked_at"
+      ]
+    },
+    "identity": {
+      "fields": [
+        "code",
+        "full_name",
+        "company_or_institution",
+        "official_entity (Customs / Taxes / Bank / FRA / other)",
+        "role",
+        "path",
+        "member_since",
+        "status (active | inactive)",
+        "password_set (true | false)"
+      ]
+    },
+    "membership": {
+      "fields": [
+        "membership_id",
+        "code",
+        "path (B2B | B2C | C2C | legal | accounting | audit | owner)",
+        "name",
+        "company",
+        "official_entity",
+        "member_since",
+        "status (approved | pending)",
+        "password_set"
+      ]
+    },
+    "notification": {
+      "fields": [
+        "notification_id",
+        "recipient_code",
+        "sender (Personal Assistant)",
+        "text",
+        "time",
+        "status (unread | read)",
+        "related_task_id",
+        "related_deal_id"
+      ]
+    },
+    "activity_log": {
+      "fields": [
+        "log_id",
+        "time",
+        "identity",
+        "code",
+        "action",
+        "path",
+        "result",
+        "details"
+      ]
+    }
+  },
+  "api_events": [
+    {
+      "event": "task.created",
+      "payload": "task_id, task_type, deal_id"
+    },
+    {
+      "event": "task.routed",
+      "payload": "task_id, assigned_partner"
+    },
+    {
+      "event": "partner.opinion_received",
+      "payload": "task_id, partner_id, opinion_type"
+    },
+    {
+      "event": "commission.collected",
+      "payload": "deal_id, total_deal_commissions_collected, bank_ref"
+    },
+    {
+      "event": "commission.split_created",
+      "payload": "deal_id, legal_3pct, accounting_3pct, mti_retained_before_operating_costs"
+    },
+    {
+      "event": "code.entered",
+      "payload": "code_used, identity_resolved, path_opened"
+    },
+    {
+      "event": "identity.shown",
+      "payload": "code_used, identity_resolved"
+    },
+    {
+      "event": "password.checked",
+      "payload": "code_used, result"
+    },
+    {
+      "event": "session.closed",
+      "payload": "session_id, code_used, path_opened"
+    },
+    {
+      "event": "notification.sent",
+      "payload": "notification_id, recipient_code, text"
+    },
+    {
+      "event": "membership.approved",
+      "payload": "code, path, name"
+    }
+  ],
+  "security_and_privacy": {
+    "data_never_sold": true,
+    "data_use": "Paid services only.",
+    "access": "Each partner sees only what concerns that partner. Each identity sees only what belongs to that identity.",
+    "log": "Every action is logged and immutable.",
+    "password_rule": "Password is exactly 8 chars, created by the person, with letter + number + symbol. After 3 wrong tries, session is locked."
+  },
+  "acceptance_checklist": [
+    "Assistant asks for a code at entry and accepts empty code only for first-time guest.",
+    "First-time guest with no code sees graphic landing with promo cards and B2B B2C C2C choices.",
+    "B2B B2C C2C each opens its own path with its own needs and documents checklist.",
+    "Membership flow issues a new code, creates a password, and marks membership approved.",
+    "After code entry, identity card shows full identity: name, company, official entity, role, code, member since, status.",
+    "Password is exactly 8 chars with letter + number + symbol, created by the person.",
+    "After correct password, work hub shows 7 actions: view, update, new deal, follow works, accounts, documents, notifications.",
+    "Returning client with last deal code reopens the exact saved personal path for that client.",
+    "Legal partner with MTI-LEGAL-001 sees legal tasks only.",
+    "Accountant with MTI-ACCT-001 sees accounting tasks only.",
+    "Auditor with MTI-AUDIT-001 sees audit tasks only, and cannot post daily entries in that session.",
+    "Accounting and audit codes are separate, even for the same office.",
+    "One session uses one code and one path. Changing role requires a new session with the other code.",
+    "Notifications from Personal Assistant reach each identity with unread count and mark read.",
+    "Account settings allow update of company and official entity and change of password.",
+    "Full log records every action: entry, password, file, task, code, notification, deal, update.",
+    "Assistant routes legal tasks to legal partner only.",
+    "Assistant routes accounting tasks to accounting partner only.",
+    "Joint tasks require both approvals before execution.",
+    "Commission engine uses total_deal_commissions_collected only, never total income, never net profit, never subscriptions.",
+    "No partner is paid before actual collection.",
+    "Every task has a written, stamped record.",
+    "Bank reconciliation runs daily and monthly.",
+    "Each identity sees only what belongs to that identity.",
+    "Every code use is logged."
+  ],
+  "delivery": {
+    "bundle_version": "MTI-DELIVERY-2026-001",
+    "bundle_name": "MTI Delivery For Programmer - Complete",
+    "system_version": "4.1",
+    "delivery_date": "2026-11-06",
+    "delivered_by": "MTI - Farag Ali - Owner",
+    "recipient": "Programmer - Name to be filled by owner",
+    "recipient_role": "Programmer",
+    "recipient_signature": "To be signed on MTI_Delivery_Checklist_For_Programmer.pdf",
+    "delivery_method": "ZIP bundle - MTI_Delivery_For_Programmer_Complete_v4_1.zip",
+    "bundle_contents": [
+      "00_README_Delivery.txt",
+      "MTI_Core_Partners_System_v4_1_Final.json - source of truth, v4.1",
+      "MTI_Programmer_One_Page_Summary.pdf - one page summary",
+      "MTI_Delivery_Checklist_For_Programmer.pdf - checklist to sign point by point",
+      "MTI_Core_Partners_System_v1.json - v1 for history",
+      "MTI_Database_One_File_Linked.xlsx - data",
+      "MTI_App_Preview.html - working app preview"
+    ],
+    "delivery_checklist_file": "MTI_Delivery_Checklist_For_Programmer.pdf",
+    "delivery_rule": "Real build starts only after all checklist boxes are ticked and all signatures are done.",
+    "previous_versions": [
+      "v1.0 - Initial",
+      "v2.0 - Commission base corrected",
+      "v3.0 - Code-based entry",
+      "v4.0 - Identity, password, work hub, notifications, B2B B2C C2C, membership",
+      "v4.1 - Documentation only, delivery block added"
+    ]
+  }
+}
